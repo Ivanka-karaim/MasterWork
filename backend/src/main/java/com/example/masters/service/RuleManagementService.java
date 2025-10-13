@@ -3,17 +3,20 @@ package com.example.masters.service;
 import com.example.masters.dto.notification.NotificationRequest;
 import com.example.masters.entity.Measurement;
 import com.example.masters.entity.Rule;
+import com.example.masters.entity.Status;
 import com.example.masters.entity.User;
 import com.example.masters.entity.enums.Role;
 import com.example.masters.exception.BadRequestException;
 import com.example.masters.mqtt.MqttService;
 import com.example.masters.repository.RuleRepository;
+import com.example.masters.repository.StatusRepository;
 import com.example.masters.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,12 +31,17 @@ public class RuleManagementService {
     private final MqttService mqttService;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
+    private final StatusRepository statusRepository;
 
 
+    @Transactional
     public void checkSensorRules(Measurement measurement) {
         List<Rule> rules = ruleRepository.findByRuleTypeAndDeviceInventoryNumberAndActive("SENSOR", measurement.getDeviceInventoryNumber(), true);
+
         for (Rule rule : rules) {
-            if (isConditionMet(rule, measurement.getValue())) {
+            Status status = statusRepository.findFirstByDeviceInventoryNumberOrderByDateTimeDesc(rule.getActionDevice().getInventoryNumber()).orElse(null);
+
+            if (isConditionMet(rule, measurement.getValue()) && (status == null || !Objects.equals(status.getActionType(), rule.getAction()))) {
                 boolean sendMessage = executeAction(rule);
                 if (!sendMessage) {
                     throw new BadRequestException("Уппссс, щось пішло не так");
@@ -58,13 +66,14 @@ public class RuleManagementService {
             ObjectMapper mapper = new ObjectMapper();
             String payload = mapper.writeValueAsString(Map.of(
                     "action", rule.getAction(),
-                    "value", rule.getActionValue()
+                    "value", rule.getActionValue() == null? 0: rule.getActionValue()
             ));
 
             mqttService.sendCommand(rule.getActionDevice().getInventoryNumber(), payload);
 
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
         return true;
@@ -72,7 +81,7 @@ public class RuleManagementService {
 
     private void sendMessageForAdminForSensorRule(Rule rule, double value) {
         NotificationRequest request = NotificationRequest.builder()
-                .title("Пристрій " + rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ? " увімкнено" : " вимкнено"))
+                .title( rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ? " увімкнено" : " вимкнено"))
                 .message("Пристрій " + rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ?
                         " було увімкнено" : " було вимкнено")+", оскільки показник датчика " + rule.getDevice().getTitle() +
                         " " + rule.getOperator() + " " + rule.getThreshold() + "\nА саме становить: " + value)
@@ -84,7 +93,7 @@ public class RuleManagementService {
     }
     private void sendMessageForAdminForTime(Rule rule) {
         NotificationRequest request = NotificationRequest.builder()
-                .title("Пристрій " + rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ? " увімкнено" : " вимкнено"))
+                .title( rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ? " увімкнено" : " вимкнено"))
                 .message("Пристрій " + rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ?
                         " було увімкнено" : " було вимкнено") + " о " + rule.getTriggerDateTime()+" за створеним правилом")
                 .build();

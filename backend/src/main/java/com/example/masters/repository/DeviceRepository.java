@@ -3,6 +3,7 @@ package com.example.masters.repository;
 import com.example.masters.entity.Device;
 
 import com.example.masters.entity.enums.Type;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

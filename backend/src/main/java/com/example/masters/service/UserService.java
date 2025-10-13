@@ -146,7 +146,7 @@ public class UserService {
     }
 
 
-    private UserProfileResponse convertUserToUserDTO(User user) {
+    public UserProfileResponse convertUserToUserDTO(User user) {
         if (user == null) return null;
 
         return UserProfileResponse.builder()

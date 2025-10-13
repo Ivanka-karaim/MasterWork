@@ -50,7 +50,7 @@ class NotificationAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val notif = notifications[position]
-        holder.title.text = shortenText(notif.title, 35)
+        holder.title.text = shortenText(notif.title, 20)
         holder.message.text = shortenText(notif.message, 75)
         holder.badge.visibility = if (!notif.read) View.VISIBLE else View.GONE
 

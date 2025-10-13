@@ -18,5 +18,7 @@ public class RuleRequest {
     private Double actionValue;       // 24
 
     private LocalDateTime triggerTime;  // для TIME правил
+    private boolean active;
+    private boolean mirrorRule;
 }
 

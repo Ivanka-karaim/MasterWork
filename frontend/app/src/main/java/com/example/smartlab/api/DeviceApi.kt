@@ -13,6 +13,9 @@ interface DeviceApi {
 
     @GET("/api/devices/type/{type}")
     suspend fun getDevicesByType(@Path("type") type: String, @Header("Authorization") token: String): Response<ApiResponse<List<DeviceResponse>>>
+    @GET("/api/devices")
+    suspend fun findAll(@Header("Authorization") token: String): Response<ApiResponse<List<DeviceResponse>>>
+
 
 
     @GET("/api/devices/{id}")

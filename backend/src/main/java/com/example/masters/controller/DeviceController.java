@@ -40,6 +40,12 @@ public class DeviceController {
         return ResponseEntity.ok(new ApiResponse<>(200,"OK",controlResponses));
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<DeviceResponse>>> getDeviceWithoutSensors() {
+        List<DeviceResponse> deviceResponses = deviceService.findAll();
+        return ResponseEntity.ok(new ApiResponse<>(200,"OK",deviceResponses));
+    }
+
 
 
 }

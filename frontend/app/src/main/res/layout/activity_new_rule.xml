@@ -24,6 +24,7 @@
             android:src="@drawable/ic_back" />
 
         <TextView
+            android:id="@+id/generalTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -56,7 +57,7 @@
         android:layout_marginTop="50dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/logoutButton"
+        app:layout_constraintBottom_toTopOf="@id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
@@ -86,7 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -167,6 +169,7 @@
 
 
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,6 +179,7 @@
                 android:text="Вибір дії:"
                 android:textColor="@color/textColor"
                 android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,11 +205,12 @@
                         android:layout_marginEnd="12dp"
                         android:src="@drawable/ic_arrow_down" />
                 </FrameLayout>
+
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp">
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1">
 
                     <Spinner
                         android:id="@+id/deviceSpinner"
@@ -227,8 +232,195 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/mirrorRule"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/custom_checkbox"
+                    android:button="@drawable/custom_checkbox"
+                    android:layout_margin="8dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="Створити зв’язане правило OFF/ON"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/isActive"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/custom_checkbox"
+                    android:button="@drawable/custom_checkbox"
+                    android:layout_margin="8dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="Активне"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timeLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/inter_regular"
+                android:text="Вибір дії:"
+                android:textColor="@color/textColor"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <Spinner
+                        android:id="@+id/actionSpinnerForTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_spinner"
+                        android:paddingEnd="40dp"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_arrow_down" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1">
+
+                    <Spinner
+                        android:id="@+id/deviceSpinnerForTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_spinner"
+                        android:paddingEnd="40dp"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_arrow_down" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/inter_regular"
+                android:text="Вибір часу:"
+                android:textColor="@color/textColor"
+                android:textSize="14sp" />
+
+            <FrameLayout
+                android:id="@+id/dateTimeForTime"
+                android:layout_width="200dp"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:id="@+id/selectedTriggerDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_spinner"
+                    android:gravity="center"
+                    android:paddingEnd="40dp"
+                    android:text="18.09.2025 12:00"
+                    android:textSize="16sp"
+                    android:textColor="@color/textColor"
+                    android:fontFamily="@font/inter_regular"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_arrow_down" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/isActiveForTime"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/custom_checkbox"
+                    android:button="@drawable/custom_checkbox"
+                    android:layout_margin="8dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="Активне"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -237,14 +429,14 @@
 
     <!-- Кнопка внизу -->
     <Button
-        android:id="@+id/logoutButton"
+        android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/button"
         android:backgroundTint="#2979FF"
         android:paddingVertical="10dp"
-        android:text="Вийти"
+        android:text="Створити правило"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

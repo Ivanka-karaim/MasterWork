@@ -31,6 +31,14 @@ public class DeviceService {
 
     }
 
+    @Transactional
+    public List<DeviceResponse> findAll() {
+        List<Device> devices = deviceRepository.findAll();
+        return devices.stream()
+                .map(this::convertToDeviceResponse)
+                .collect(Collectors.toList());
+    }
+
     @Transactional(readOnly = true)
     public List<DeviceResponse> findAllByType(String type) {
         Type typeEnum = Type.valueOf(type);

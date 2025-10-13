@@ -50,7 +50,7 @@ class SensorsActivity: BaseActivity() {
             startActivity(Intent(this, HomeActivity::class.java))
         }
         binding.bottomNav.edit.setOnClickListener {
-            Toast.makeText(this, "Create rules", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, RulesActivity::class.java))
         }
         binding.bottomNav.users.setOnClickListener {
             Toast.makeText(this, "Users?students", Toast.LENGTH_SHORT).show()
