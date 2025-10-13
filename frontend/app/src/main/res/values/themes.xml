@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.SmartLabApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
+    </style>
+    <style name="ThemeOverlay_SmartLab_DatePicker_Fullscreen" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen"/>
+
+
+</resources>

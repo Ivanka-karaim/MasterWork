@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar зверху -->
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/topToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingVertical="10dp"
+        android:elevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Логотип зліва -->
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_back"
+                android:contentDescription="@string/app_name" />
+
+            <!-- Кнопка профілю справа -->
+            <ImageView
+                android:id="@+id/profileButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_profile"
+                android:contentDescription="Профіль"
+                />
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Основний контент зі скролом -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topToolbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:gravity="center_horizontal">
+
+            <!-- Заголовок -->
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Журнал Дій"
+                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/textColor"
+                android:textSize="26sp"
+                android:layout_marginBottom="24dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/deviceImage"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="3"
+                    android:src="@drawable/ic_lamp" />
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="3dp"
+                    android:paddingHorizontal="3dp"
+                    android:scaleX="1.3"
+                    android:scaleY="1.3"
+                    android:background="@drawable/custom_switch_back">
+
+                    <Switch
+                        android:id="@+id/deviceSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:showText="false"
+                        android:splitTrack="false"
+                        android:thumb="@drawable/custom_switch_thumb"
+                        android:track="@drawable/custom_switch_track"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="30dp"
+                android:text="Журнал дій"
+                android:textColor="@color/textColor"
+                android:fontFamily="@font/montserrat_bold"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/dateRangePicker"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_box_for_calendar"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/ic_calendar"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"/>
+
+                <TextView
+                    android:id="@+id/tvDateRange"
+                    android:text="------------------------"
+                    android:textColor="@color/textColor"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/arrowDown"
+                    android:src="@drawable/ic_arrow_down"
+                    android:layout_width="12dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_height="12dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_box_for_calendar"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textColor="@color/textColor"
+                        android:text="Дія:"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textColor="@color/textColor"
+                        android:text="Значення:"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textColor="@color/textColor"
+                        android:text="Дата та час:"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textColor="@color/textColor"
+                        android:text="Хто виконав:"
+                        android:layout_weight="2"/>
+
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/logRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingHorizontal="10dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="16dp" />
+
+            </LinearLayout>
+
+            <!-- Список пристроїв -->
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/errorPopup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_error_popup"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:fontFamily="@font/inter_medium"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:elevation="10dp"
+        android:visibility="gone"
+        android:text="Помилка завантаження" />
+</RelativeLayout>

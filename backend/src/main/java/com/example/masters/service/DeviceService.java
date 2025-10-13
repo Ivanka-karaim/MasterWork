@@ -1,0 +1,59 @@
+package com.example.masters.service;
+
+import com.example.masters.dto.device.DeviceResponse;
+import com.example.masters.entity.Device;
+import com.example.masters.entity.Status;
+import com.example.masters.entity.enums.Type;
+import com.example.masters.exception.NotFoundException;
+import com.example.masters.repository.DeviceRepository;
+import com.example.masters.repository.StatusRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service
+@AllArgsConstructor
+public class DeviceService {
+
+    private final DeviceRepository deviceRepository;
+    private final StatusRepository statusRepository;
+
+    @Transactional(readOnly = true)
+    public DeviceResponse findDeviceById(UUID deviceId) {
+        Device device = deviceRepository.findById(deviceId).orElseThrow(() -> new NotFoundException("Не знайдено пристрій"));
+        return convertToDeviceResponse(device);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<DeviceResponse> findAllByType(String type) {
+        Type typeEnum = Type.valueOf(type);
+        List<Device> devices = deviceRepository.findByType(typeEnum);
+        return devices.stream()
+                .map(this::convertToDeviceResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    public DeviceResponse convertToDeviceResponse(Device device) {
+        String imageBase64 = Base64.getEncoder().encodeToString(device.getImage());
+        Status status = statusRepository.findFirstByDeviceInventoryNumberOrderByDateTimeDesc(device.getInventoryNumber()).orElse(null);
+        return DeviceResponse.builder()
+                .id(device.getId())
+                .title(device.getTitle())
+                .description(device.getDescription())
+                .inventoryNumber(device.getInventoryNumber())
+                .type(device.getType().getValue())
+                .image(imageBase64)
+                .isOn(status != null && Objects.equals(status.getActionType(), "ON"))
+                .build();
+
+    }
+
+}

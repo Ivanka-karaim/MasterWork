@@ -1,0 +1,14 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Фон поп-апу -->
+    <solid android:color="@android:color/white"/>
+
+    <!-- Закруглені верхні кути -->
+    <corners android:radius="16dp"/>
+
+    <!-- Бордер -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/black"/> <!-- Колір рамки, можеш змінити -->
+</shape>
