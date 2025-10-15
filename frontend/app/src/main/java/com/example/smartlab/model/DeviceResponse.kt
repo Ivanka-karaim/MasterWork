@@ -7,5 +7,6 @@ data class DeviceResponse(
     val inventoryNumber: String,
     val image: String,
     val type: String,
-    val on: Boolean
+    val on: Boolean,
+    var mode: String
 )

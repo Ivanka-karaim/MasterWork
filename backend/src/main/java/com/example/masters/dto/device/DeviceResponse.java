@@ -20,4 +20,5 @@ public class DeviceResponse {
     private String image;
     private String type;
     private boolean isOn;
+    private String mode;
 }

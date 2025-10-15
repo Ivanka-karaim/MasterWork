@@ -8,6 +8,7 @@ import com.example.masters.entity.User;
 import com.example.masters.entity.enums.Role;
 import com.example.masters.exception.BadRequestException;
 import com.example.masters.mqtt.MqttService;
+import com.example.masters.repository.MeasurementRepository;
 import com.example.masters.repository.RuleRepository;
 import com.example.masters.repository.StatusRepository;
 import com.example.masters.repository.UserRepository;
@@ -32,21 +33,24 @@ public class RuleManagementService {
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
+    private final MeasurementRepository measurementRepository;
 
 
     @Transactional
     public void checkSensorRules(Measurement measurement) {
         List<Rule> rules = ruleRepository.findByRuleTypeAndDeviceInventoryNumberAndActive("SENSOR", measurement.getDeviceInventoryNumber(), true);
+        Double measurementValue = measurementRepository.getAverageOfLastTen(measurement.getDeviceInventoryNumber(), measurement.getParameterName());
+        System.out.println(measurementValue);
 
         for (Rule rule : rules) {
             Status status = statusRepository.findFirstByDeviceInventoryNumberOrderByDateTimeDesc(rule.getActionDevice().getInventoryNumber()).orElse(null);
 
-            if (isConditionMet(rule, measurement.getValue()) && (status == null || !Objects.equals(status.getActionType(), rule.getAction()))) {
+            if (isConditionMet(rule, measurementValue) && (status == null || !Objects.equals(status.getActionType(), rule.getAction()))) {
                 boolean sendMessage = executeAction(rule);
                 if (!sendMessage) {
                     throw new BadRequestException("Уппссс, щось пішло не так");
                 } else{
-                    sendMessageForAdminForSensorRule(rule, measurement.getValue());
+                    sendMessageForAdminForSensorRule(rule, measurementValue);
                 }
             }
         }
@@ -84,7 +88,7 @@ public class RuleManagementService {
                 .title( rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ? " увімкнено" : " вимкнено"))
                 .message("Пристрій " + rule.getActionDevice().getTitle() + (Objects.equals(rule.getAction(), "ON") ?
                         " було увімкнено" : " було вимкнено")+", оскільки показник датчика " + rule.getDevice().getTitle() +
-                        " " + rule.getOperator() + " " + rule.getThreshold() + "\nА саме становить: " + value)
+                        " " + rule.getOperator() + " " + rule.getThreshold() + "\nА саме в середньому становить: " + value)
                         .build();
         List<User> users = userRepository.findByRole(Role.ADMIN);
         for (User user : users) {

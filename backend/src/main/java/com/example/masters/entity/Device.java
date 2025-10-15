@@ -36,4 +36,6 @@ public class Device {
     @Basic(fetch = FetchType.EAGER)
     private byte[] image;
 
+    private String mode;
+
 }

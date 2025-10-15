@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,19 +28,43 @@ public class MeasurementService {
     private final DeviceRepository deviceRepository;
 
     @Transactional(readOnly = true)
+    public List<MeasurementDto> getMeasurementsByDeviceId(UUID deviceId) {
+        Device device = deviceRepository.findById(deviceId)
+                .orElseThrow(() -> new NotFoundException("Датчик не знайдено"));
+        List<Measurement> measurements = measurementRepository.findByDeviceInventoryNumber(device.getInventoryNumber());
+
+
+        Map<String, Measurement> latestByParam = measurements.stream()
+                .collect(Collectors.toMap(
+                        Measurement::getParameterName,
+                        m -> m,
+                        (m1, m2) -> m1.getDateTime().after(m2.getDateTime()) ? m1 : m2
+                ));
+        return latestByParam.values().stream()
+                .map(m -> new MeasurementDto(
+                        m.getId(), m.getDateTime(), m.getValue(),
+                        m.getParameterName(), device.getInventoryNumber()
+
+
+                ))
+                .sorted(Comparator.comparing(MeasurementDto::getParameterName))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<MeasurementDto> getMeasurements(UUID deviceId,
-                                             String parameterName,
-                                             String fromDate,
-                                             String toDate,
-                                             Double minValue,
-                                             Double maxValue) {
+                                                String parameterName,
+                                                String fromDate,
+                                                String toDate,
+                                                Double minValue,
+                                                Double maxValue) {
 
         Device device = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> new NotFoundException("Датчик не знайдено"));
 
         Specification<Measurement> spec = (root, query, cb) -> cb.conjunction();
         Timestamp fromTs = (fromDate == null || fromDate.isBlank()) ? null : Timestamp.valueOf(fromDate.replace("T", " "));
-        Timestamp toTs   = (toDate == null || toDate.isBlank()) ? null : Timestamp.valueOf(toDate.replace("T", " "));
+        Timestamp toTs = (toDate == null || toDate.isBlank()) ? null : Timestamp.valueOf(toDate.replace("T", " "));
 
         spec = spec
                 .and(MeasurementSpecification.hasDeviceInventoryNumber(device.getInventoryNumber()))
@@ -50,6 +76,7 @@ public class MeasurementService {
                 .map(this::convertMeasurementToMeasurementDto)
                 .collect(Collectors.toList());
     }
+
     private MeasurementDto convertMeasurementToMeasurementDto(Measurement measurement) {
         Timestamp timestamp = measurement.getDateTime();
         LocalDateTime localDateTime = timestamp.toInstant()
@@ -61,7 +88,7 @@ public class MeasurementService {
                 .value(measurement.getValue())
                 .parameterName(measurement.getParameterName())
                 .deviceInventoryNumber(String.valueOf(measurement.getDeviceInventoryNumber()))
-                .dateTime(localDateTime)
+                .dateTime(timestamp)
                 .build();
     }
 

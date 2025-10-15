@@ -40,6 +40,7 @@ class DevicesActivity:  BaseActivity()   {
             "LIGHTING" -> binding.title.text = "Освітлення"
             "CLIMATE" -> binding.title.text = "Клімат"
             "MEASUREMENT" -> binding.title.text = "Датчики"
+            "ENERGY" -> binding.title.text = "Енергія"
 
             else -> binding.title.text = ""
         }

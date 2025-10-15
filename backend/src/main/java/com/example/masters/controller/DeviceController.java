@@ -2,9 +2,13 @@ package com.example.masters.controller;
 
 import com.example.masters.dto.ApiResponse;
 import com.example.masters.dto.control.ControlResponse;
+import com.example.masters.dto.device.DeviceRequest;
 import com.example.masters.dto.device.DeviceResponse;
+import com.example.masters.dto.device.ModeRequest;
+import com.example.masters.dto.management.MeasurementDto;
 import com.example.masters.service.ControlService;
 import com.example.masters.service.DeviceService;
+import com.example.masters.service.MeasurementService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import java.util.UUID;
 public class DeviceController {
     private final DeviceService deviceService;
     private final ControlService controlService;
+    private final MeasurementService measurementService;
 
     @GetMapping("/type/{type}")
     public ResponseEntity<ApiResponse<List<DeviceResponse>>> getDevices(@PathVariable String type) {
@@ -44,6 +49,18 @@ public class DeviceController {
     public ResponseEntity<ApiResponse<List<DeviceResponse>>> getDeviceWithoutSensors() {
         List<DeviceResponse> deviceResponses = deviceService.findAll();
         return ResponseEntity.ok(new ApiResponse<>(200,"OK",deviceResponses));
+    }
+
+    @GetMapping("/{id}/measurements")
+    public ResponseEntity<ApiResponse<List<MeasurementDto>>> getDeviceMeasurements(@PathVariable UUID id) {
+        List<MeasurementDto> measurementDtos = measurementService.getMeasurementsByDeviceId(id);
+        return ResponseEntity.ok(new ApiResponse<>(200,"OK",measurementDtos));
+    }
+
+    @PutMapping("/{id}/mode")
+    public ResponseEntity<ApiResponse<DeviceResponse>> editMode(@PathVariable UUID id, @RequestBody ModeRequest mode) {
+        DeviceResponse deviceResponse = deviceService.editMode(id, mode.getMode());
+        return ResponseEntity.ok(new ApiResponse<>(200,"OK",deviceResponse));
     }
 
 

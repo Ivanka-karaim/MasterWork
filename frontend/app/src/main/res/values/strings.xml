@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Smart Lab</string>
+    <string name="underlined_statistics"><u>Статистика</u></string>
+
 </resources>

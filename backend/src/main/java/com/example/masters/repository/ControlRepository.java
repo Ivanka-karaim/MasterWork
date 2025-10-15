@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ControlRepository extends JpaRepository<Control, UUID> {
@@ -17,5 +18,7 @@ public interface ControlRepository extends JpaRepository<Control, UUID> {
                                                        Timestamp from,
                                                        Timestamp to);
     List<Control> findAllByDeviceId(UUID deviceId);
+
+    Optional<Control> findFirstByDeviceIdOrderByDateTimeDesc(UUID deviceId);
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,9 +14,10 @@ import java.util.UUID;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class MeasurementDto {
     private UUID id;
-    private LocalDateTime dateTime;
+    private Timestamp dateTime;
     private double value;
     private String parameterName;
     private String deviceInventoryNumber;

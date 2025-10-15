@@ -43,6 +43,11 @@ class HomeActivity:  BaseActivity()  {
             val intent = Intent(this, SensorsActivity::class.java)
             startActivity(intent)
         }
+        binding.energy.setOnClickListener {
+            val intent = Intent(this, DevicesActivity::class.java)
+            intent.putExtra("TYPE", "ENERGY")
+            startActivity(intent)
+        }
 
     }
 

@@ -4,7 +4,8 @@ public enum Type {
     LIGHTING("LIGHTING"),
     CLIMATE("CLIMATE"),
     ENERGY("ENERGY"),
-    SENSOR("SENSOR"),;
+    SENSOR("SENSOR"),
+    GRID("GRID");
 
     private final String value;
 

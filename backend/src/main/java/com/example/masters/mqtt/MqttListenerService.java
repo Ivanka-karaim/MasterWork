@@ -7,6 +7,7 @@ import com.example.masters.entity.Status;
 import com.example.masters.repository.MeasurementRepository;
 import com.example.masters.repository.StatusRepository;
 import com.example.masters.repository.DeviceRepository;
+import com.example.masters.service.GridService;
 import com.example.masters.service.RuleManagementService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +41,7 @@ public class MqttListenerService {
     private final StatusRepository statusRepository;
     private final MeasurementRepository measurementRepository;
     private final RuleManagementService ruleManagementService;
+    private final GridService gridService;
 
     @PostConstruct
     @Transactional
@@ -108,6 +110,28 @@ public class MqttListenerService {
 
                             log.info("Saved control action for device {} with payload {}", deviceInventoryNumber, payload);
 
+                        } else if(topic.contains("grid")) {
+
+                            String deviceInventoryNumber = root.has("deviceInventoryNumber") ? root.get("deviceInventoryNumber").asText() : "";
+                            String actionDeviceInventoryNumber = root.has("actionDeviceInventoryNumber") ? root.get("actionDeviceInventoryNumber").asText() : "";
+
+                            String actionType = root.has("value") ? root.get("value").asText() : "";
+
+                            Status status = Status.builder()
+                                    .actionType(actionType)
+                                    .actionValue(0)
+                                    .dateTime(Timestamp.valueOf(LocalDateTime.now()))
+                                    .deviceInventoryNumber(deviceInventoryNumber)
+                                    .build();
+
+                            gridService.gridConnection(actionType, deviceInventoryNumber);
+                            gridService.gridSetting(actionType, actionDeviceInventoryNumber);
+
+
+                            statusRepository.save(status);
+                            statusRepository.flush();
+
+                            log.info("Saved control action for device {} with payload {}", deviceInventoryNumber, payload);
                         }
                     } catch (Exception e) {
                         log.error("Error processing message from topic {}", topic, e);
@@ -123,6 +147,7 @@ public class MqttListenerService {
             client.connect(options);
             client.subscribe("laboratory/measurements", 1);
             client.subscribe("laboratory/+/status", 1);
+            client.subscribe("laboratory/grid", 1);
             log.info("Subscribed to topic: laboratory/+/status");
 
         } catch (MqttException e) {

@@ -35,6 +35,13 @@ public class DeviceSeeder implements CommandLineRunner {
                         "src/main/resources/images/ic_temperature.png"
                 ));
                 deviceRepository.save(createDevice(
+                        "Датчик задимленості",
+                        "Для вимірювання рівню задимленості в лабораторії",
+                        "SMOKE-001",
+                        Type.SENSOR,
+                        "src/main/resources/images/ic_smoke.png"
+                ));
+                deviceRepository.save(createDevice(
                         "Кондиціонер",
                         "Для охолодження приміщення",
                         "INV-002",
@@ -48,6 +55,29 @@ public class DeviceSeeder implements CommandLineRunner {
                         Type.CLIMATE,
                         "src/main/resources/images/ic_heating.png"
                 ));
+                deviceRepository.save(createDevice(
+                        "Вентиляція",
+                        "Для вентиляції лабораторії",
+                        "INV-004",
+                        Type.CLIMATE,
+                        "src/main/resources/images/ic_ventilation.png"
+                ));
+                deviceRepository.save(createDevice(
+                        "Система резервного живлення",
+                        "Відповідає автоматичне забезпечення живлення лабораторії",
+                        "INV-005",
+                        Type.ENERGY,
+                        "src/main/resources/images/ic_battery.png"
+                ));
+
+                deviceRepository.save(createDevice(
+                        "Мережа",
+                        "Надає живлення лабораиторії",
+                        "INV-006",
+                        Type.GRID,
+                        "src/main/resources/images/ic_battery.png"
+                ));
+
 
             }
         }catch (Exception e) {
