@@ -38,7 +38,8 @@ public class NotificationService {
                 .build();
         notificationRepository.save(notification);
         notificationRepository.flush();
-        websocketHandler.sendToUser(notification);
+        NotificationDto notificationDto = convertNotificationToDto(notification);
+        websocketHandler.sendToUser(notificationDto, userId);
     }
 
     public List<NotificationDto> getUserNotifications() {

@@ -16,5 +16,6 @@ data class RuleData(
     val actionValue: Double?,
     val triggerTime: String?,
     val active: Boolean,
+    val strict: Boolean,
     val historyRules: List<HistoryRuleResponse>?
 ): Parcelable

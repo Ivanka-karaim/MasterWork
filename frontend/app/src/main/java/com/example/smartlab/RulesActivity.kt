@@ -19,6 +19,7 @@ class RulesActivity : BaseActivity() {
     private lateinit var adapter: RuleAdapter
     private lateinit var binding: ActivityRulesBinding
     private lateinit var ruleApi: RuleApi
+    private var allRules: List<RuleData> = emptyList()
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -39,6 +40,9 @@ class RulesActivity : BaseActivity() {
             val intent = Intent(this, FilterRuleActivity::class.java)
             intent.putExtra("filters", filters)
             startActivity(intent)
+        }
+        binding.isStrict.setOnCheckedChangeListener { _, _ ->
+            updateRulesList()
         }
 
         ruleApi = RetrofitClient.getInstance().create(RuleApi::class.java)
@@ -62,17 +66,27 @@ class RulesActivity : BaseActivity() {
                     actionDeviceIds = actionDeviceIds,
                     active = active)
             if (response.isSuccessful) {
-                val rules = response.body()?.data ?: emptyList()
-                adapter = RuleAdapter(
-                    rules = rules.toMutableList(),
-                    onEditClick = { rule -> editRule(rule) },
-                    onDeleteClick = { rule -> deleteRule(rule) }
-                )
-                binding.rulesRecyclerView.adapter = adapter
+                allRules = response.body()?.data ?: emptyList()
+                updateRulesList()
             } else if (response.code() == 401) {
                 ErrorHandler.unauthorizedUser(this@RulesActivity)
             }
         }
+    }
+
+    private fun updateRulesList() {
+        val filtered = if (binding.isStrict.isChecked) {
+            allRules.filter { it.strict }
+        } else {
+            allRules.filter { !it.strict }
+        }
+
+        adapter = RuleAdapter(
+            rules = filtered.toMutableList(),
+            onEditClick = { rule -> editRule(rule) },
+            onDeleteClick = { rule -> deleteRule(rule) }
+        )
+        binding.rulesRecyclerView.adapter = adapter
     }
 
     private fun createRule() {
@@ -121,7 +135,7 @@ class RulesActivity : BaseActivity() {
             startActivity(Intent(this, NotificationActivity::class.java))
         }
         binding.bottomNav.users.setOnClickListener {
-            Toast.makeText(this, "Users?students", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, UsersActivity::class.java))
         }
     }
 }

@@ -97,7 +97,7 @@ class RuleEditActivity: AppCompatActivity() {
             generalTitle.text = "Редагування правила"
         } else {
             button.text = "Створити правило"
-            generalTitle.text = "Ствыорення правила"
+            generalTitle.text = "Створення правила"
         }
     }
 

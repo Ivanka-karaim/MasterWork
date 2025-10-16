@@ -30,11 +30,12 @@ public class Rule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "action_device_id")
-    private Device actionDevice; // пристрій для керування
+    private Device actionDevice;
     private String action;
     private Double actionValue;
 
     private Timestamp triggerDateTime;
 
     private boolean active;
+    private boolean strict;
 }

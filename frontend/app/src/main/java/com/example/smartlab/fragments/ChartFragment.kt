@@ -149,10 +149,29 @@ fun MeasurementLineChart(data: List<Measurement>) {
 
             // === СІТКА ПО X (дати) - тільки видимі точки ===
             val dateStep = max(1, ((visibleEndIndex - visibleStartIndex) / 5))
+            val minLabelSpacing = 80f  // Мінімальна відстань між підписами
+            var lastLabelX = -9999f
+
+            // Аналіз діапазону дат
+            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
+            val allDates = data.mapNotNull {
+                try { inputFormat.parse(it.dateTime) } catch (e: Exception) { null }
+            }
+
+            val minDate = allDates.minOrNull()
+            val maxDate = allDates.maxOrNull()
+            val dayDiff = if (minDate != null && maxDate != null) {
+                ((maxDate.time - minDate.time) / (1000 * 60 * 60 * 24)).toInt()
+            } else 0
+
+            // Якщо різниця менше 2 днів — показуємо дату + час
+            val showTime = dayDiff <= 1
+
             for (i in visibleStartIndex..visibleEndIndex step dateStep) {
                 val x = paddingPx + i * stepX + offsetX
                 if (x < paddingPx || x > width - paddingPx / 2) continue
 
+                // Малюємо вертикальну сітку
                 drawLine(
                     color = Color(0xFFE0E0E0),
                     start = Offset(x, paddingPx / 2),
@@ -160,17 +179,47 @@ fun MeasurementLineChart(data: List<Measurement>) {
                     strokeWidth = 1.dp.toPx()
                 )
 
-                drawContext.canvas.nativeCanvas.drawText(
-                    data[i].dateTime.take(10),
-                    x - 40f,
-                    height - 20f,
-                    android.graphics.Paint().apply {
+                // Форматуємо дату
+                val dateLabel = try {
+                    val date = inputFormat.parse(data[i].dateTime)
+                    if (showTime) {
+                        val datePart = java.text.SimpleDateFormat("dd.MM", java.util.Locale.getDefault()).format(date!!)
+                        val timePart = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(date)
+                        "$datePart\n$timePart"
+                    } else {
+                        java.text.SimpleDateFormat("dd.MM", java.util.Locale.getDefault()).format(date!!)
+                    }
+                } catch (e: Exception) {
+                    data[i].dateTime.take(10)
+                }
+
+                // Малюємо текст, якщо не перекривається з попереднім
+                if (x - lastLabelX >= minLabelSpacing) {
+                    val paint = android.graphics.Paint().apply {
                         color = android.graphics.Color.parseColor("#757575")
                         textSize = 28f
+                        textAlign = android.graphics.Paint.Align.CENTER
                         isAntiAlias = true
                     }
-                )
+
+                    val lines = dateLabel.split("\n")
+                    val lineHeight = paint.fontSpacing
+
+                    // Малюємо кожен рядок (дата зверху, час знизу)
+                    for ((index, line) in lines.withIndex()) {
+                        drawContext.canvas.nativeCanvas.drawText(
+                            line,
+                            x,
+                            height - 20f + index * lineHeight,
+                            paint
+                        )
+                    }
+
+                    lastLabelX = x
+                }
             }
+
+
 
             // === ОБМЕЖЕННЯ ОБЛАСТІ МАЛЮВАННЯ ===
             clipRect(

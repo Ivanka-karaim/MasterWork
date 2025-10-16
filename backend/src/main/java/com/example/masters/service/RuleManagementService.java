@@ -73,6 +73,16 @@ public class RuleManagementService {
                     "value", rule.getActionValue() == null? 0: rule.getActionValue()
             ));
 
+//TODO коли система буде працювати це не потрібно
+            Status status = Status.builder()
+                    .actionType(rule.getAction())
+                    .actionValue(0)
+                    .deviceInventoryNumber(rule.getActionDevice().getInventoryNumber())
+                    .dateTime(Timestamp.valueOf(LocalDateTime.now()))
+                    .build();
+            statusRepository.save(status);
+            statusRepository.flush();
+
             mqttService.sendCommand(rule.getActionDevice().getInventoryNumber(), payload);
 
 

@@ -3,6 +3,7 @@ package com.example.masters.service;
 import com.example.masters.dto.management.ActionRequest;
 import com.example.masters.entity.Control;
 import com.example.masters.entity.Device;
+import com.example.masters.entity.Status;
 import com.example.masters.entity.User;
 import com.example.masters.exception.NotFoundException;
 import com.example.masters.mqtt.MqttService;
@@ -29,6 +30,7 @@ public class ManagementService {
     private final MqttService mqttService;
     private final ControlRepository controlRepository;
     private final GlobalResolver globalResolver;
+    private final StatusRepository statusRepository;
 
     @Transactional(noRollbackFor = NotFoundException.class)
     public boolean createAction(ActionRequest actionRequest) {
@@ -53,6 +55,14 @@ public class ManagementService {
                     .dateTime(Timestamp.valueOf(LocalDateTime.now()))
                     .device(device)
                     .build();
+            Status status = Status.builder()
+                    .actionType(actionRequest.getAction())
+                    .actionValue(actionRequest.getValue())
+                    .deviceInventoryNumber(device.getInventoryNumber())
+                    .dateTime(Timestamp.valueOf(LocalDateTime.now()))
+                    .build();
+            statusRepository.save(status);
+            statusRepository.flush();
 
             controlRepository.save(control);
             controlRepository.flush();

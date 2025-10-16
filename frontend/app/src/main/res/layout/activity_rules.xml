@@ -55,6 +55,35 @@
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/isStrict"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/custom_checkbox"
+                    android:button="@drawable/custom_checkbox"
+                    android:layout_margin="8dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="Жорсткі правила"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rulesRecyclerView"

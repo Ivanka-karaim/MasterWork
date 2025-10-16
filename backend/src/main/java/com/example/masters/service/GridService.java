@@ -94,7 +94,15 @@ public class GridService {
                     "action", action,
                     "value", 0
             ));
-
+//TODO коли система буде працювати це не потрібно
+            Status status = Status.builder()
+                    .actionType(action)
+                    .actionValue(0)
+                    .deviceInventoryNumber(deviceInventoryNumber)
+                    .dateTime(Timestamp.valueOf(LocalDateTime.now()))
+                    .build();
+            statusRepository.save(status);
+            statusRepository.flush();
             mqttService.sendCommand(deviceInventoryNumber, payload);
 
 

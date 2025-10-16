@@ -22,5 +22,6 @@ public class RuleResponse {
     private Double actionValue;
     private LocalDateTime triggerTime;
     private boolean active;
+    private boolean strict;
     private List<HistoryRuleResponse> historyRules;
 }

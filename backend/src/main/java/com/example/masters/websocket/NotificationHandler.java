@@ -1,5 +1,6 @@
 package com.example.masters.websocket;
 
+import com.example.masters.dto.notification.NotificationDto;
 import com.example.masters.entity.Notification;
 import com.example.masters.entity.User;
 import com.example.masters.repository.NotificationRepository;
@@ -39,10 +40,10 @@ public class NotificationHandler extends TextWebSocketHandler {
         userSessions.values().remove(session);
     }
 
-    public void sendToUser(Notification notification){
+    public void sendToUser(NotificationDto notification, UUID userId){
 
         // Відправляємо через WebSocket (якщо онлайн)
-        WebSocketSession session = userSessions.get(notification.getUser().getId());
+        WebSocketSession session = userSessions.get(userId);
         if (session != null && session.isOpen()) {
             String payload = null;
             try {

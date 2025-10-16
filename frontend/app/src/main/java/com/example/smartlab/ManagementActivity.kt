@@ -179,11 +179,17 @@ class ManagementActivity : AppCompatActivity() {
                     this@ManagementActivity,
                     R.drawable.rounded_box_event_log
                 )
+                binding.onAutoMode.setTextColor(
+                    ContextCompat.getColor(this@ManagementActivity, R.color.textColor)
+                )
                 binding.onAutoMode.text = "Вимкнути режим АВТО"
             } else {
                 binding.onAutoMode.background = ContextCompat.getDrawable(
                     this@ManagementActivity,
                     R.drawable.button
+                )
+                binding.onAutoMode.setTextColor(
+                    ContextCompat.getColor(this@ManagementActivity, R.color.white)
                 )
                 binding.onAutoMode.text = "Увімкнути режим АВТО"
             }

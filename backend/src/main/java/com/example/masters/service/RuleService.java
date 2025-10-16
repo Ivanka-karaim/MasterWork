@@ -80,6 +80,7 @@ public class RuleService {
                 .triggerTime(rule.getTriggerDateTime()!= null? rule.getTriggerDateTime().toLocalDateTime(): null)
                 .actionDevice(convertDeviceToDeviceSimpleResponse(rule.getActionDevice()))
                 .historyRules(histories.stream().map(this::convertHistoryToDTO).collect(Collectors.toList()))
+                .strict(rule.isStrict())
                 .build();
     }
 
@@ -119,6 +120,7 @@ public class RuleService {
                 .actionValue(request.getActionValue())
                 .triggerDateTime(request.getTriggerTime()!= null? Timestamp.valueOf(request.getTriggerTime()): null)
                 .active(request.isActive())
+                .strict(false)
                 .build();
 
         Rule newRule = ruleRepository.save(rule);

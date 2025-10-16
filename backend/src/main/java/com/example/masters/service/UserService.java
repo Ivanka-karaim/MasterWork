@@ -17,10 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +33,34 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final GlobalResolver globalResolver;
+
+
+
+    @Transactional
+    public List<UserProfileResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        users.sort(Comparator.comparingInt(user -> {
+            switch (user.getRole()) {
+                case ADMIN: return 0;
+                case TEACHER: return 1;
+                case STUDENT: return 2;
+                default: return 3; // інші статуси, якщо будуть
+            }
+        }));
+        return users.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
+
+    }
+
+    @Transactional
+    public void deleteUser(UUID userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        } else{
+            throw new NotFoundException("User not found");
+        }
+
+    }
 
 
 
@@ -108,6 +138,34 @@ public class UserService {
 
             updateFieldIfNotEmpty(userProfileUpdateRequest.getFullName(), user::setFullName);
             updateFieldIfNotEmpty(userProfileUpdateRequest.getEmail(), user::setEmail);
+
+            userRepository.save(user);
+            userRepository.flush();
+            log.info("User profile updated for userId={}", user.getId());
+        } else {
+            log.warn("User not found with userId={}", user.getId());
+            throw new NotFoundException("Такого користувача не існуєd");
+        }
+        return convertUserToUserDTO(user);
+    }
+
+    @Transactional(noRollbackFor = {ConflictException.class, NotFoundException.class})
+    public UserProfileResponse updateUserProfileForAdmin(UUID userId, SignUpRequestDTO userProfileUpdateRequest) {
+
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            existByEmail(userProfileUpdateRequest.getEmail(), user);
+
+            updateFieldIfNotEmpty(userProfileUpdateRequest.getFullName(), user::setFullName);
+            updateFieldIfNotEmpty(userProfileUpdateRequest.getEmail(), user::setEmail);
+            if(userProfileUpdateRequest.getPassword() != null ) {
+                user.setPassword(passwordEncoder.encode(userProfileUpdateRequest.getPassword()));
+
+            }
+            if(userProfileUpdateRequest.getRole() != null ) {
+                user.setRole(Role.valueOf(userProfileUpdateRequest.getRole()));
+            }
 
             userRepository.save(user);
             userRepository.flush();

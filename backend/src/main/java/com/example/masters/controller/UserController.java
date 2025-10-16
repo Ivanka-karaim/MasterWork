@@ -4,6 +4,7 @@ import com.example.masters.dto.ApiResponse;
 import com.example.masters.dto.TokenResponse;
 import com.example.masters.dto.user.SignInRequestDTO;
 import com.example.masters.dto.user.SignUpRequestDTO;
+import com.example.masters.dto.user.UpdatePasswordRequest;
 import com.example.masters.dto.user.UserProfileResponse;
 import com.example.masters.entity.User;
 import com.example.masters.exception.UnauthorizedException;
@@ -75,11 +76,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Користувач успішно вийшов із системи");
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping("/getAllUsers")
-//    public ResponseEntity<ApiResponse<List<UserProfileResponse>>> getAllUsers() {
-//
-//
-//    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<ApiResponse<List<UserProfileResponse>>> getAllUsers() {
+        List<UserProfileResponse> users = userService.getAllUsers();
+        return ResponseEntity.ok(new ApiResponse<>(200, "OK", users));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/user/{id}/update")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> createUser(@PathVariable("id") UUID userId, @Valid @RequestBody SignUpRequestDTO signUpRequestDTO) {
+        UserProfileResponse userProfileResponse = userService.updateUserProfileForAdmin(userId, signUpRequestDTO);
+        return ResponseEntity.ok(new ApiResponse<>(200, "OK", userProfileResponse));
+
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/user/{id}/delete")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new ApiResponse<>(200, "OK", null));
+    }
+
+
+
 
 }

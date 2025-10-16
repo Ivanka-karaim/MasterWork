@@ -84,6 +84,12 @@ class RuleAdapter(
                 deleteRuleForTime.setOnClickListener { onDeleteClick(rule) }
                 historyForTime.setOnClickListener { showHistoryDialog(rule) }
             }
+            if(rule.strict){
+                editRule.visibility=View.GONE
+                editRuleForTime.visibility = View.GONE
+                deleteRule.visibility = View.GONE
+                deleteRuleForTime.visibility = View.GONE
+            }
         }
 
 
