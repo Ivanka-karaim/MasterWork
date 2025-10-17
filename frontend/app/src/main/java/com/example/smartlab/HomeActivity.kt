@@ -59,7 +59,7 @@ class HomeActivity:  BaseActivity()  {
             startActivity(Intent(this, RulesActivity::class.java))
         }
         binding.bottomNav.users.setOnClickListener {
-            Toast.makeText(this, "Users?students", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, UsersActivity::class.java))
         }
         binding.bottomNav.notificationFrame.setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
