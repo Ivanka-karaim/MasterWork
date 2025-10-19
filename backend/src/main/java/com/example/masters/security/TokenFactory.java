@@ -28,12 +28,13 @@ public class TokenFactory {
     public String createRefreshToken(UUID userId) {
         return jwtUtil.generateRefreshToken(userId);
     }
-    public TokenResponse buildTokenResponse(String accessToken, String refreshToken, UUID userId) {
+    public TokenResponse buildTokenResponse(String accessToken, String refreshToken, UUID userId, String role) {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .userId(userId)
+                .role(role)
                 .expiresIn(900) // seconds (15 minutes)
                 .build();
     }

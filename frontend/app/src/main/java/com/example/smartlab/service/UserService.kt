@@ -39,8 +39,12 @@ object UserService {
                 val userId = response.body()?.data?.userId
                 if(userId != null) {
                     SharedPreferencesFactory(context).saveSharedPreferences("USER_ID", userId)
-                    // Автоматично підключаємо WebSocket після успішного логіну
+
                     GlobalNotificationManager.connect(userId)
+                }
+                val role = response.body()?.data?.role
+                if(role != null){
+                    SharedPreferencesFactory(context).saveSharedPreferences("ROLE", role)
                 }
 
             } else {
@@ -97,7 +101,7 @@ object UserService {
         return withContext(Dispatchers.IO) {
             val response = userApi.signUp(
                 SignUpModel(
-                    fullName, email, password, confirmPassword, "ADMIN"
+                    fullName, email, password, confirmPassword, "STUDENT"
                 )
             )
             if (response.isSuccessful) {

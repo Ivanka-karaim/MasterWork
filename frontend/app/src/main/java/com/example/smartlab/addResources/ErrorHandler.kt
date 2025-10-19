@@ -12,6 +12,9 @@ object ErrorHandler {
         GlobalNotificationManager.logout()
         val context = activity
         SharedPreferencesFactory(context).clearSharedPreferences("TOKEN")
+        SharedPreferencesFactory(context).clearSharedPreferences("USER_ID")
+        SharedPreferencesFactory(context).clearSharedPreferences("ROLE")
+
 
         val intent = Intent(context, SignInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -41,7 +41,8 @@ import java.time.format.DateTimeFormatter
 class RuleAdapter(
     private val rules: MutableList<RuleData>,
     private val onEditClick: (RuleData) -> Unit,
-    private val onDeleteClick: (RuleData) -> Unit
+    private val onDeleteClick: (RuleData) -> Unit,
+    private val role: String
 ) :
     RecyclerView.Adapter<RuleAdapter.RuleViewHolder>() {
 
@@ -62,6 +63,13 @@ class RuleAdapter(
                 creatingDateTime.text = formatDateTime(rule.historyRules?.lastOrNull()?.dateTime)
 
                 // Обробники натискань
+                if(role != "ADMIN"){
+                    editRule.visibility = View.GONE
+                    deleteRule.visibility = View.GONE
+                }
+                if(role == "STUDENT"){
+                    history.visibility = View.GONE
+                }
                 editRule.setOnClickListener { onEditClick(rule) }
                 deleteRule.setOnClickListener { onDeleteClick(rule) }
                 history.setOnClickListener { showHistoryDialog(rule) }
@@ -78,7 +86,13 @@ class RuleAdapter(
                 creatingUserForTime.text = rule.historyRules?.lastOrNull()?.user?.fullName ?: "—"
 
                 creatingDateTimeForTime.text = formatDateTime(rule.historyRules?.lastOrNull()?.dateTime)
-
+                if(role != "ADMIN"){
+                    editRuleForTime.visibility = View.GONE
+                    deleteRuleForTime.visibility = View.GONE
+                }
+                if(role == "STUDENT"){
+                    historyForTime.visibility = View.GONE
+                }
                 // Обробники натискань
                 editRuleForTime.setOnClickListener { onEditClick(rule) }
                 deleteRuleForTime.setOnClickListener { onDeleteClick(rule) }

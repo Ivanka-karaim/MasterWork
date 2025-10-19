@@ -3,6 +3,7 @@ package com.example.smartlab
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ class RulesActivity : BaseActivity() {
     private lateinit var binding: ActivityRulesBinding
     private lateinit var ruleApi: RuleApi
     private var allRules: List<RuleData> = emptyList()
+    private lateinit var role: String
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -31,6 +33,14 @@ class RulesActivity : BaseActivity() {
 
 
         binding.rulesRecyclerView.layoutManager = LinearLayoutManager(this)
+        role = SharedPreferencesFactory(this).getSharedPreferences("ROLE")!!
+
+        if(role != "ADMIN"){
+            binding.createRuleButton.visibility = View.GONE
+        }
+        if(role == "STUDENT"){
+            binding.isStrict.visibility = View.GONE
+        }
         binding.createRuleButton.setOnClickListener {
             createRule()
         }
@@ -84,7 +94,8 @@ class RulesActivity : BaseActivity() {
         adapter = RuleAdapter(
             rules = filtered.toMutableList(),
             onEditClick = { rule -> editRule(rule) },
-            onDeleteClick = { rule -> deleteRule(rule) }
+            onDeleteClick = { rule -> deleteRule(rule) },
+            role
         )
         binding.rulesRecyclerView.adapter = adapter
     }

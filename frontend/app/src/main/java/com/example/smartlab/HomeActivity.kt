@@ -2,6 +2,7 @@ package com.example.smartlab
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartlab.addResources.SharedPreferencesFactory
@@ -25,6 +26,14 @@ class HomeActivity:  BaseActivity()  {
             GlobalNotificationManager.setNotificationCallback { 
                 updateNotificationBadge()
             }
+        }
+        val role = SharedPreferencesFactory(this).getSharedPreferences("ROLE")!!
+        if(role != "ADMIN"){
+            binding.addDevice.visibility = View.GONE
+        }
+        binding.addDevice.setOnClickListener{
+            val intent = Intent(this, UploadDeviceActivity::class.java)
+            startActivity(intent)
         }
 
         binding.lamp.setOnClickListener{

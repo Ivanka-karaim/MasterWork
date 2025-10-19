@@ -33,6 +33,7 @@ class DevicesActivity:  BaseActivity()   {
 
         binding.deviceRecyclerView.layoutManager = LinearLayoutManager(this)
         val token = SharedPreferencesFactory(this).getSharedPreferences("TOKEN")!!
+        val role = SharedPreferencesFactory(this).getSharedPreferences("ROLE")!!
         deviceApi = RetrofitClient.getInstance().create(DeviceApi::class.java)
 
         val type = intent.getStringExtra("TYPE") ?: return
@@ -49,7 +50,7 @@ class DevicesActivity:  BaseActivity()   {
             val response = deviceApi.getDevicesByType(type, "Bearer $token")
             if (response.isSuccessful) {
                 val devices = response.body()?.data ?: emptyList()
-                deviceAdapter = DeviceAdapter(devices, this@DevicesActivity, lifecycleScope, binding.errorPopup, type)
+                deviceAdapter = DeviceAdapter(devices, this@DevicesActivity, lifecycleScope, binding.errorPopup, type, role)
                 binding.deviceRecyclerView.adapter = deviceAdapter
             } else if (response.code() == 401) {
                 ErrorHandler.unauthorizedUser(this@DevicesActivity)

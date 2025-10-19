@@ -11,8 +11,11 @@ import com.example.masters.service.DeviceService;
 import com.example.masters.service.MeasurementService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +27,19 @@ public class DeviceController {
     private final DeviceService deviceService;
     private final ControlService controlService;
     private final MeasurementService measurementService;
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<DeviceResponse>> createDevice( @RequestParam String title,
+                                                                     @RequestParam String description,
+                                                                     @RequestParam String inventoryNumber,
+                                                                     @RequestParam String type,
+                                                                     @RequestParam("image") MultipartFile image) {
+        System.out.println(111111);
+        DeviceResponse deviceResponse = deviceService.createDevice(title, description, inventoryNumber, type, image);
+        return ResponseEntity.ok(new ApiResponse<>(20, "OK", deviceResponse));
+
+    }
 
     @GetMapping("/type/{type}")
     public ResponseEntity<ApiResponse<List<DeviceResponse>>> getDevices(@PathVariable String type) {

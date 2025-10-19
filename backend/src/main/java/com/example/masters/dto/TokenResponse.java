@@ -13,4 +13,5 @@ public class TokenResponse {
     private long expiresIn;
     private String tokenType;
     private UUID userId;
+    private String role;
 }

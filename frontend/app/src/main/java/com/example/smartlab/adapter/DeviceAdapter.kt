@@ -31,7 +31,8 @@ class DeviceAdapter(private val devices: List<DeviceResponse>,
                     private val context: Context,
                     private val scope: CoroutineScope,
                     private val error: TextView,
-                    private val type: String
+                    private val type: String,
+                    private val role: String
 ) :
     RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
@@ -62,6 +63,11 @@ class DeviceAdapter(private val devices: List<DeviceResponse>,
         holder.switch.setOnCheckedChangeListener(null)
         holder.switch.isChecked = device.on
 
+        if(role == "STUDENT"){
+            holder.switch.isEnabled  = false
+        } else{
+            holder.switch.isEnabled  = true
+        }
         setDeviceImage(holder, device.image)
         setupArrow(holder)
         setupSwitch(holder, device)

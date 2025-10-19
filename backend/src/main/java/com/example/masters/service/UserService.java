@@ -17,10 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -38,13 +35,23 @@ public class UserService {
 
     @Transactional
     public List<UserProfileResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = new ArrayList<User>();
+        User userThis = globalResolver.requireCurrentUser();
+        if(userThis.getRole() == Role.ADMIN) {
+             users = userRepository.findAll();
+        } else if(userThis.getRole() == Role.TEACHER) {
+            users.addAll(userRepository.findByRole(Role.TEACHER));
+            users.addAll(userRepository.findByRole(Role.STUDENT));
+        } else{
+            users.addAll(userRepository.findByRole(Role.STUDENT));
+        }
+
         users.sort(Comparator.comparingInt(user -> {
             switch (user.getRole()) {
                 case ADMIN: return 0;
                 case TEACHER: return 1;
                 case STUDENT: return 2;
-                default: return 3; // інші статуси, якщо будуть
+                default: return 3;
             }
         }));
         return users.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());

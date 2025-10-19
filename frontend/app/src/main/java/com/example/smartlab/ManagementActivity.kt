@@ -29,6 +29,7 @@ class ManagementActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityManagementBinding
     private lateinit var deviceId: String
+    private lateinit var role: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,13 @@ class ManagementActivity : AppCompatActivity() {
                 )
             }
         }
+        role = SharedPreferencesFactory(this).getSharedPreferences("ROLE")!!
+        if(role == "STUDENT"){
+            binding.deviceSwitch.isEnabled  = false
+        } else{
+            binding.deviceSwitch.isEnabled  = true
+        }
+
 
         loadDeviceLog()
     }
@@ -130,6 +138,7 @@ class ManagementActivity : AppCompatActivity() {
                 if (deviceInfo != null) {
                     binding.title.text = deviceInfo.title
                     setDeviceImage(deviceInfo.image)
+                    binding.deviceSwitch.isChecked = deviceInfo.on
                     if (deviceInfo.type == "ENERGY") {
                         binding.visibleEnergyCharge.visibility = View.VISIBLE
                         val response = api.getMeasurements(deviceId, "Bearer $token")
@@ -151,18 +160,14 @@ class ManagementActivity : AppCompatActivity() {
 
 
                         }
-
-
                     }
                 }
-
-
-
-
-                api.getDeviceLog(deviceId, "Bearer $token").body()?.data?.let {
-                    binding.logRecyclerView.apply {
-                        layoutManager = LinearLayoutManager(this@ManagementActivity)
-                        adapter = EventLogAdapter(it)
+                if(role != "STUDENT") {
+                    api.getDeviceLog(deviceId, "Bearer $token").body()?.data?.let {
+                        binding.logRecyclerView.apply {
+                            layoutManager = LinearLayoutManager(this@ManagementActivity)
+                            adapter = EventLogAdapter(it)
+                        }
                     }
                 }
             } catch (e: Exception) {

@@ -76,7 +76,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Користувач успішно вийшов із системи");
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/getAllUsers")
     public ResponseEntity<ApiResponse<List<UserProfileResponse>>> getAllUsers() {
         List<UserProfileResponse> users = userService.getAllUsers();

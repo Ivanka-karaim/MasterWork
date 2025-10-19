@@ -5,5 +5,6 @@ data class UserToken(
     val refreshToken: String,
     val expiresIn: Long,
     val tokenType: String,
-    val userId: String
+    val userId: String,
+    val role: String
 )

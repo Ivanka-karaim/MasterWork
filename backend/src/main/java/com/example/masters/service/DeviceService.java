@@ -1,10 +1,12 @@
 package com.example.masters.service;
 
+import com.example.masters.dto.device.DeviceRequest;
 import com.example.masters.dto.device.DeviceResponse;
 import com.example.masters.entity.Control;
 import com.example.masters.entity.Device;
 import com.example.masters.entity.Status;
 import com.example.masters.entity.enums.Type;
+import com.example.masters.exception.BadRequestException;
 import com.example.masters.exception.NotFoundException;
 import com.example.masters.repository.ControlRepository;
 import com.example.masters.repository.DeviceRepository;
@@ -13,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +31,30 @@ public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final StatusRepository statusRepository;
     private final ControlRepository controlRepository;
+
+    @Transactional
+    public DeviceResponse createDevice(String title, String description, String inventoryNumber, String type, MultipartFile image) {
+        try {
+            System.out.println(22222);
+            byte[] imageBytes = image.getBytes();
+
+            System.out.println(33333333);
+            Device device = Device.builder()
+                    .title(title)
+                    .description(description)
+                    .inventoryNumber(inventoryNumber)
+                    .type(Type.valueOf(type))
+                    .image(imageBytes)
+                    .build();
+
+            System.out.println(44444444);
+             deviceRepository.save(device);
+             return convertToDeviceResponse(device);
+        } catch (IOException e) {
+            throw new BadRequestException("Failed to process image");
+        }
+
+    }
 
     @Transactional(noRollbackFor = NotFoundException.class)
     public DeviceResponse editMode(UUID deviceId, String mode) {

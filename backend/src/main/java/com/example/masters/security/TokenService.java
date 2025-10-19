@@ -125,6 +125,6 @@ public class TokenService {
         String accessToken = tokenFactory.createAccessToken(user.getId(), user.getRole());
         String refreshToken = tokenFactory.createRefreshToken(user.getId());
         saveUserTokens(user, accessToken, refreshToken);
-        return tokenFactory.buildTokenResponse(accessToken, refreshToken, user.getId());
+        return tokenFactory.buildTokenResponse(accessToken, refreshToken, user.getId(), user.getRole().toString());
     }
 }
